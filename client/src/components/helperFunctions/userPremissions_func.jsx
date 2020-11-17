@@ -13,13 +13,11 @@ const userPremissions = async() => {
 
     .catch(err=>{console.log(err)})
      
-     console.log(data.success)
 
      var obj ={
          username:data.user,
          userlvl:data.userlvl
      }
-     console.log(obj)
 
      return obj
       

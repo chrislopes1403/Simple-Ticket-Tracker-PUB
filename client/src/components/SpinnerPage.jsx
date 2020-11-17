@@ -1,5 +1,4 @@
 import React from "react";
-import "./SpinnerPage.css"
 const SpinnerPage = () => {
   return (
     <>

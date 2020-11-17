@@ -1,29 +1,25 @@
-import React from "react"
-import {useState,useEffect} from "react"
+import React from "react";
+import {useState,useEffect} from "react";
 import {
   BrowserRouter as Router, 
-  Link,
   Route,
   Redirect
-} from 'react-router-dom'
-import './App.css';
+} from 'react-router-dom';
 import Login from './components/loginComponents/Login';
-import addUser from './components/helperFunctions/addUser_func'
-import authenticateUser from './components/helperFunctions/authenticate_func'
-import authorizeUser from './components/helperFunctions/authorize_func'
-import SpinnerPage from './components/loginComponents/SpinnerPage'
-import Dashboard from './components/dashboardComponents/Dashboard'
+import authenticateUser from './components/helperFunctions/authenticate_func';
+import {authorizeUser,handleLogout} from './components/helperFunctions/authorize_func';
+import SpinnerPage from './components/SpinnerPage';
+import Dashboard from './components/Dashboard/Dashboard';
 
 
 
 
 function App() {
-  const [auth,setAuth]= useState(false)
-  const [loading,setLoading]= useState(true)
+  const [auth,setAuth]= useState(false);
+  const [loading,setLoading]= useState(true);
 
   useEffect(() => {
-    console.log("handle auth...")
-  handleAuthorize()
+  handleAuthorize();
   },[]);
   
 
@@ -41,13 +37,11 @@ function App() {
         if(isAuth)
         {
           setAuth(true);
-         // setRedirect(true);
 
         }
         else
         {
           setAuth(false);
-         // setRedirect(false);
         }
 
       }
@@ -100,10 +94,23 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
   
   <Route {...rest} render={(props) => (
     auth === true
-      ? <Component {...props} />
+      ? <Component {...props}  Logout={Logout} authorizeUser={authorizeUser} />
       : <Redirect to='/login' />
   )} />
 )
+
+
+const Logout =async() =>
+{
+  await handleLogout();
+  setAuth(false);
+
+}
+
+
+
+
+
 
 if(loading)
 {
@@ -112,11 +119,10 @@ if(loading)
 else{
  
       return (
-        <Router>    
-                       
+        <Router>          
             <Route exact path="/login" component={Logins} />
             <PrivateRoute  exact path='/dashboard' component={Dashboard} />
-            <Redirect exact from="/" to="login" component={Logins} />
+            <Redirect  from="/" to="login" component={Logins} />
         </Router>
       );
     }

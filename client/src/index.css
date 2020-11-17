@@ -1,0 +1,358 @@
+body {
+  background-color: #1e1e2f !important; 
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+.Main-Navbar
+{
+background-color: #1e1e2f!important; 
+}
+
+.Main-Navbar-Title
+{
+  color: white !important;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 25px !important;
+
+}
+
+.Main-SideNav
+{
+  background: #4a27e4 !important;
+  background: -webkit-linear-gradient(0deg, #ba54f5 0%, #e14eca 100%);
+  background: -o-linear-gradient(0deg, #ba54f5 0%, #e14eca 100%);
+  background: -moz-linear-gradient(0deg, #ba54f5 0%, #e14eca 100%);
+  background: linear-gradient(0deg, #ba54f5 0%, #e14eca 100%);
+  height: calc(100vh - 90px);
+  width: 230px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  background-size: cover;
+  background-position: center center;
+  display: block !important;
+  box-shadow: 0px 0px 45px 0px rgba(0, 0, 0, 0.6);
+  margin-top: 80px;
+  margin-left: 20px;
+  border-radius: 5px;
+
+
+}
+
+.SideNav-Link
+{
+  color:white !important;
+  padding-top:15px !important;
+
+}
+
+hr
+{
+  background-color: white !important;
+  width: 200px !important;
+  margin-left:10px;
+}
+
+.fa-user
+{
+  color: white;
+  font-size:25px;
+  padding-right:5px;
+}
+
+.fa-circle
+{
+  font-size:5px;
+  padding-right:10px;
+}
+
+#circle-0,#circle-1,
+#circle-2,#circle-3,
+#circle-4
+{
+  visibility: hidden;
+}
+
+.SideNav-Link:hover
+{
+  font-weight:bold !important;
+} 
+
+
+.main-content
+{
+position: fixed;
+width: 1070px;
+max-height: 570px;
+top:80px;
+left:275px;
+}
+
+.main-content
+{
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+
+
+.test-block
+{
+  height: 2000px;
+  width:200px;
+  background-color: blue;
+}
+
+  .scrollbar-night-fade::-webkit-scrollbar {
+  width: 10px;
+}
+
+
+.scrollbar-night-fade::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+.scrollbar-night-fade::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+.scrollbar-night-fade::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+.card-panel
+{
+  background:  #27293d !important;
+  color: white !important;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+.card-panel-2
+{
+  overflow-x: hidden !important;
+  background:  #444763 !important;
+  color: white !important;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+
+#logins
+{
+    margin-top:100px;
+    width:500px!important ;
+    height: 500px !important;
+}
+
+#loginbutton
+{
+  background:  #27293d !important;
+
+    width:200px!important;
+}
+
+.login-title
+{
+  color: white !important;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+.chart-data
+{
+  height: 100px;
+  width: 200px;
+}
+
+.controlled-tab
+{
+  color: white !important;
+  font-family: 'Rajdhani', sans-serif !important;
+}
+.overdue-card
+{
+  color: white !important;
+  font-family: 'Rajdhani', sans-serif !important;
+  overflow-x: hidden;
+}
+
+tr td {
+  color: white;
+}
+
+tr td:hover {
+  color: black;
+}
+
+tr th
+{
+  color: white;
+
+}
+
+.btn-text
+{
+    font-size: 8px;
+}
+
+.all-data-page
+{
+    width: 1100px;
+    height: 550px;
+}
+
+.card-panel-user
+{
+  background:  #27293d !important;
+  color: black !important;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+
+.card-panel-user-tabs
+{
+  background:  #27293d !important;
+  font-family: 'Rajdhani', sans-serif;
+  height:275px;
+}
+
+
+.card-panel-ticket-body-left
+{
+  background:  #27293d !important;
+  color: white !important;
+  font-family: 'Rajdhani', sans-serif;
+  overflow-x: hidden;
+}
+
+.card-panel-ticket-body-right
+{
+  background:  #27293d !important;
+  color: white !important;
+  font-family: 'Rajdhani', sans-serif;
+  overflow-x: hidden;
+}
+
+
+.alert-messages {
+  position: fixed;
+        top: 50px;
+        right: 10px;
+        z-index: 7000;
+        width:300px;
+        
+
+}
+
+
+/*managment css*/
+.pie-chart
+{
+    width: 500px;
+    text-align: center;
+
+
+}
+
+.create-container
+{
+    width:500px;
+}
+
+
+.nav-tabs
+{
+    text-align: center;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
+.create-project
+{
+    height: 550px;
+}
+
+.drop
+{
+    overflow-y:scroll;
+    max-height: 200px;
+}
+
+.added-Users
+{
+    border-radius: 5px;
+
+    height:100px;
+    width:460px;
+}
+
+
+.overdue
+{
+    height:300px;
+    width:600px;
+    margin-right:300px;
+
+}
+
+.overduecard
+{
+    width:650px;
+}
+
+/*userprofile*/
+#usertabs
+{
+    overflow: hidden;
+
+}
+
+.tabss
+{
+height: 100px;
+width:730px;
+}
+
+.tableContainer
+{
+height: 500px;
+width:730px;
+margin-right:100px;
+}
+
+.details
+{
+    height:25px;
+    font-size:xx-small;
+}
+
+
+/*Spinner*/
+#Spinner
+{
+
+    height:100px;
+    width: 100px;
+    margin-left:600px;
+    margin-top:300px;
+    color:white !important;
+    
+}
+
+/*ticket page*/
+.btn-commit
+{
+    width:200px;
+}
+
+.des-body
+{
+    width: 430px;
+
+}

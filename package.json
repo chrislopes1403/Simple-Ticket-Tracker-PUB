@@ -14,15 +14,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.32",
-    "@fortawesome/free-solid-svg-icons": "^5.15.1",
-    "@fortawesome/react-fontawesome": "^0.1.11",
+    
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.5.2",
     "cookie": "^0.4.1",
     "cookie-parser": "^1.4.5",
     "crypto": "^1.0.1",
+    "datatables.net": "^1.10.22",
     "express": "^4.17.1",
     "git": "^0.1.5",
     "mongodb": "^3.6.2",

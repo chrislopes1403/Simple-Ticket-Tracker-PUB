@@ -29,12 +29,13 @@ if (process.env.NODE_ENV === 'production') {
   }
 
 
-  app.post('/api/adduser',  async(req,res)=>{
+  app.post('/api/adduser',authorize_cookie,  async(req,res)=>{
       
     const user=req.body.user;
     const password = req.body.password;
     const lvl = req.body.lvl;
-    console.log(req.body)
+
+    console.log("add-user")
     
     bcrypt.hash(password, 10,  async function(err, hash) {
 
@@ -84,7 +85,7 @@ app.post('/api/authenticate', async(req,res)=>{
     
     const user=req.body.user;
     const password = req.body.password;
-    console.log(user,password)
+    //console.log(user,password)
 
     const client = new MongoClient(uri,{useNewUrlParser: true, useUnifiedTopology: true});
     var sesh_id = generate_key();
@@ -100,7 +101,6 @@ app.post('/api/authenticate', async(req,res)=>{
         { "userList.Username": user }, 
         { "$set": { "userList.$.sessionID" : sesh_id } });
     
-        console.log(user)
     if(results.userList.some(item=>item.Username===user))
     {
         var obj=results.userList.find(item=>item.Username===user)
@@ -157,8 +157,6 @@ function  generate_key() {
 
 app.post('/api/authorize', authorize_cookie,async(req,res,next)=>{
    
-
-
     const client = new MongoClient(uri,{useNewUrlParser: true, useUnifiedTopology: true});
 
     try {
@@ -169,7 +167,7 @@ app.post('/api/authorize', authorize_cookie,async(req,res,next)=>{
         {projection: { "userList.Username":1, "userList.sessionID":1, "userList.Userlvl":1,_id:0 }});
        
         var obj=results.userList.find(item=>item.sessionID=== req.signedCookies.session_id)
-       console.log("obj..."+obj.Username)
+       //console.log("obj..."+obj.Username)
     
       return res.status(200).send({success: true, user:obj.Username,userlvl:obj.Userlvl })
 
@@ -182,6 +180,493 @@ app.post('/api/authorize', authorize_cookie,async(req,res,next)=>{
     
 })
 
+app.post('/api/allTicketTableData',authorize_cookie, async(req,res)=>{
+    const client = new MongoClient(uri,{useNewUrlParser: true, useUnifiedTopology: true});
+
+    try {
+        // Connect to the MongoDB cluster
+        await client.connect();
+ 
+        // Make the appropriate DB calls
+    const results=await client.db("ticketdatabase").collection("ticketdb").findOne({title:"Tickets"}, 
+    {projection: { _id:0 }})
+        
+    //console.log(results)
+     res.status(200).send({results});
+
+ 
+    } catch (e) {
+        console.error(e);
+        res.status(403).send({success: false, message: 'mongo failed'});
+    } finally {
+        await client.close();
+    }
+
+    })
+
+    app.post('/api/allTicketTableData',authorize_cookie, async(req,res)=>{
+        const client = new MongoClient(uri,{useNewUrlParser: true, useUnifiedTopology: true});
+    
+        try {
+            // Connect to the MongoDB cluster
+            await client.connect();
+     
+            // Make the appropriate DB calls
+        const results=await client.db("ticketdatabase").collection("ticketdb").findOne({title:"Tickets"}, 
+        {projection: { _id:0 }})
+            
+        console.log(results)
+         res.status(200).send({results});
+    
+     
+        } catch (e) {
+            console.error(e);
+            res.status(403).send({success: false, message: 'mongo failed'});
+        } finally {
+            await client.close();
+        }
+    
+        })
+
+        app.post('/api/allProjectTableData', async(req,res)=>{
+            const client = new MongoClient(uri,{useNewUrlParser: true, useUnifiedTopology: true});
+        
+            try {
+                // Connect to the MongoDB cluster
+                await client.connect();
+         
+                // Make the appropriate DB calls
+            const results=await client.db("ticketdatabase").collection("ticketdb").findOne({title:"Projects"}, 
+            {projection: { _id:0 }})
+                
+            //console.log(results)
+             res.status(200).send({results});
+        
+         
+            } catch (e) {
+                console.error(e);
+                res.status(403).send({success: false, message: 'mongo failed'});
+            } finally {
+                await client.close();
+            }
+        
+            })
+    
+
+app.post('/api/makeTicketComment',authorize_cookie, async(req,res)=>{
+
+    const user =req.body.user;
+    const comment =req.body.comment;
+    const userlvl =req.body.userlvl;
+    const ticketID=req.body.id;
+
+    //console.log(user,comment,userlvl,ticketID)
+    const client = new MongoClient(uri,{useNewUrlParser: true, useUnifiedTopology: true});
+
+    try {
+        // Connect to the MongoDB cluster
+        await client.connect();
+
+        const Results=await client.db("ticketdatabase").collection("ticketdb").updateOne(
+            {title:"Tickets","ticketList.ticketID":ticketID }, 
+            { "$push": { "ticketList.$.ticketComments" : 
+
+            {user:user,
+            userlvl:userlvl,
+            comment:comment,
+            date:Date(),     
+            }
+
+        } });
+
+
+            return res.status(200).send({success: true, message: 'ticket update comment'});
+
+
+        } catch (e) {
+        console.error(e);
+        res.status(403).send({success: false, message: 'mongo failed'});
+        } finally {
+        await client.close();
+         }
+
+
+})
+
+app.post('/api/updateTicket',authorize_cookie, async(req,res)=>{
+
+    const title =req.body.title;
+    const description =req.body.description;
+    const fidelity =req.body.fidelity;
+    const ticketID=req.body.id;
+
+    //console.log(title,description,fidelity,ticketID)
+
+    const client = new MongoClient(uri,{useNewUrlParser: true, useUnifiedTopology: true});
+
+    try {
+        // Connect to the MongoDB cluster
+        await client.connect();
+
+        if(title)
+        {
+        await client.db("ticketdatabase").collection("ticketdb").updateOne(
+            {title:"Tickets","ticketList.ticketID":ticketID }, 
+            { "$set": { "ticketList.$.ticketTitle" : title } });
+        }
+        if(description)
+        {
+        await client.db("ticketdatabase").collection("ticketdb").updateOne(
+            {title:"Tickets","ticketList.ticketID":ticketID }, 
+            { "$set": { "ticketList.$.ticketDescription" : description } });
+        }
+        if(fidelity)
+        {
+        await client.db("ticketdatabase").collection("ticketdb").updateOne(
+            {title:"Tickets","ticketList.ticketID":ticketID }, 
+            { "$set": { "ticketList.$.fidelity" : fidelity } });
+        }
+
+            return res.status(200).send({success: true, message: 'ticket update edit'});
+
+
+        } catch (e) {
+        console.error(e);
+        res.status(403).send({success: false, message: 'mongo failed'});
+        } finally {
+        await client.close();
+         }
+
+
+})
+
+app.post('/api/makeProjectComment',authorize_cookie, async(req,res)=>{
+
+    const user =req.body.user;
+    const comment =req.body.comment;
+    const userlvl =req.body.userlvl;
+    const projectID=req.body.id;
+
+    const client = new MongoClient(uri,{useNewUrlParser: true, useUnifiedTopology: true});
+
+    try {
+        // Connect to the MongoDB cluster
+        await client.connect();
+
+        const Results=await client.db("ticketdatabase").collection("ticketdb").updateOne(
+            {title:"Projects","projectList.projectID":projectID }, 
+            { "$push": { "projectList.$.projectComments" : 
+
+            {user:user,
+            userlvl:userlvl,
+            comment:comment,
+            date:Date(),     
+            }
+
+        } });
+
+
+            return res.status(200).send({success: true, message: 'project update comment'});
+
+
+        } catch (e) {
+        console.error(e);
+        res.status(403).send({success: false, message: 'mongo failed'});
+        } finally {
+        await client.close();
+         }
+
+
+})
+
+
+app.post('/api/updateProject', authorize_cookie,async(req,res)=>{
+
+    const title =req.body.title;
+    const description =req.body.description;
+    const projectID=req.body.id;
+
+
+    const client = new MongoClient(uri,{useNewUrlParser: true, useUnifiedTopology: true});
+
+    try {
+        // Connect to the MongoDB cluster
+        await client.connect();
+
+        if(title)
+        {
+        await client.db("ticketdatabase").collection("ticketdb").updateOne(
+            {title:"Projects","projectList.projectID":projectID }, 
+            { "$set": { "projectList.$.projectTitle" : title } });
+        }
+        if(description)
+        {
+        await client.db("ticketdatabase").collection("ticketdb").updateOne(
+            {title:"Projects","projectList.projectID":projectID }, 
+            { "$set": { "projectList.$.projectDescription" : description } });
+        }
+     
+
+            return res.status(200).send({success: true, message: 'project update edit'});
+
+
+        } catch (e) {
+        console.error(e);
+        res.status(403).send({success: false, message: 'mongo failed'});
+        } finally {
+        await client.close();
+         }
+
+
+})
+
+app.post('/api/FreeUsers', authorize_cookie,async(req,res)=>{
+
+
+    const client = new MongoClient(uri,{useNewUrlParser: true, useUnifiedTopology: true});
+
+    try {
+        // Connect to the MongoDB cluster
+        await client.connect();
+        var users= [];
+        const result= await client.db("ticketdatabase").collection("ticketdb")
+        .aggregate([
+            { '$match': { 'title': 'Users' }},
+            {$project: {
+                _id: 0,
+                title: 1,
+                userList: {
+                  $filter:
+                   {
+                    input: "$userList",
+                    as: "item",
+                    cond: {$eq: ["$$item.freeUser", true ]}                   
+                  }
+                }
+              }
+            }]).toArray();
+
+         result[0].userList.map((item,i)=>{
+        users.push({user:item.Username,userlvl:item.Userlvl})
+         })
+        
+        return res.status(200).send({users});
+
+
+        } catch (e) {
+        console.error(e);
+        res.status(403).send({success: false, message: 'mongo failed'});
+        } finally {
+        await client.close();
+         }
+
+
+})
+app.post('/api/createProject', authorize_cookie,async(req,res)=>{
+
+    const title=req.body.title;
+    const description= req.body.description;
+    const teamleader= req.body.teamlead;
+    const assigned=req.body.assigned; 
+    const client = new MongoClient(uri,{useNewUrlParser: true, useUnifiedTopology: true});
+
+
+    var assigned2 = []
+
+    assigned.map((item,i)=>{
+
+        assigned2.push(item.user)
+    })
+    
+    
+    try {
+        // Connect to the MongoDB cluster
+        await client.connect();
+ 
+        // Make the appropriate DB calls
+        
+        const projectList = await client.db("ticketdatabase").collection("ticketdb").findOne({title:"Projects"}, 
+        {projection: { _id:0, title:0 }});
+
+        var projectTotal= projectList.projectList.length+1;
+        
+        await client.db("ticketdatabase").collection("ticketdb").updateOne(
+            { title: "Projects" },
+            {
+            $push: {
+                    projectList:{
+                                    $each: [ { 
+                                        projectID:projectTotal,
+                                        projectTitle:title,
+                                        projectDescription:description,
+                                        ticketIDList:[],
+                                        projectComments:[],
+                                                                       
+                                        assignedUsers:assigned,
+                                        teamLeader:teamleader,
+
+                                        dateCreated:Date(),
+                                        dateCompleted:""
+
+                                    
+                                    } ]
+                                }
+                    }
+            }
+       );
+       
+      
+     await client.db("ticketdatabase").collection("ticketdb").updateMany(
+        
+        { title:"Users"},
+        { $set: { "userList.$[user].freeUser" : false  } },
+        {
+          arrayFilters: [{ "user.Username":{ $in:assigned2}} ]
+        }, { multi: true } );
+                
+      
+        
+     res.status(200).send({success: true, message: 'mongo success '});
+
+ 
+    } catch (e) {
+        console.error(e);
+        res.status(403).send({success: false, message: 'mongo failed'});
+    } finally {
+        await client.close();
+    }
+
+    })
+   
+    
+
+    app.post('/api/makeTicketFromProject', async(req,res)=>{
+
+        const title=req.body.title;
+        const description= req.body.description;
+        const ProjectID=req.body.id;
+        const fidelity=req.body.fidelity; 
+        //console.log(title,description,ProjectID,fidelity);
+        const client = new MongoClient(uri,{useNewUrlParser: true, useUnifiedTopology: true});
+    
+     
+        try {
+            // Connect to the MongoDB cluster
+            await client.connect();
+    
+
+            const ticketList = await client.db("ticketdatabase").collection("ticketdb").findOne({title:"Tickets"}, 
+            {projection: { _id:0, title:0 }});
+    
+            var ticketTotal= ticketList.ticketList.length+1;
+            // Make the appropriate DB calls
+            await client.db("ticketdatabase").collection("ticketdb").updateOne(
+                { title: "Tickets" },
+                {
+                $push: {
+                        ticketList:{
+                                        $each: [ { 
+                                            ticketID:ticketTotal,
+                                            ticketTitle:title,
+                                            ticketDescription:description,
+                                            fidelity:fidelity,
+                                            assignedProjectID:ProjectID,
+                                            assignedUsers:[],
+                                            ticketComments:[],
+                                            dateCreated:Date(),
+                                            dateCompleted:""
+                                        } ]
+                                    }
+                        }
+                }
+        );
+            
+
+        res.status(200).send({success: true, message: 'mongo success create Ticket '});
+
+    
+        } catch (e) {
+            console.error(e);
+            res.status(403).send({success: false, message: 'mongo failed'});
+        } finally {
+            await client.close();
+        }
+
+    });
+
+    app.post('/api/Logout',async(req,res)=>{
+        /*
+        res.clearCookie(req.signedCookies.session_id);
+        req.cookies(req.signedCookies.session_id, {expires: Date.now()});
+        res.status(200).send({success: true, message: 'logged out'});
+        */
+       res.clearCookie('session_id');
+       res.status(200).send({success: true, message: 'logged out'});
+        return;
+
+    })
+
+
+
+
+app.post('/api/completeProject', async(req,res)=>{
+
+        const projectID=req.body.id;
+    
+        const client = new MongoClient(uri,{useNewUrlParser: true, useUnifiedTopology: true});
+    
+        try {
+            await client.connect();
+            var date = Date();
+            await client.db("ticketdatabase").collection("ticketdb").updateOne(
+                {title:"Projects","projectList.projectID":projectID }, 
+                { "$set": { "projectList.$.dateCompleted" : date } });
+           
+          
+                return res.status(200).send({success: true, message: 'project completed update'});
+    
+            } catch (e) {
+            console.error(e);
+            res.status(403).send({success: false, message: 'mongo failed'});
+            } finally {
+            await client.close();
+             }  
+    })
+
+    
+
+app.post('/api/completeTicket',authorize_cookie, async(req,res)=>{
+
+    const ticketID=req.body.id;
+
+    const client = new MongoClient(uri,{useNewUrlParser: true, useUnifiedTopology: true});
+
+    try {
+        await client.connect();
+        var date = Date();
+
+        await client.db("ticketdatabase").collection("ticketdb").updateOne(
+            {title:"Tickets","ticketList.ticketID":ticketID }, 
+            { "$set": { "ticketList.$.dateCompleted" : date } });
+       
+      
+            return res.status(200).send({success: true, message: 'ticket completed update'});
+
+        } catch (e) {
+        console.error(e);
+        res.status(403).send({success: false, message: 'mongo failed'});
+        } finally {
+        await client.close();
+         }  
+})
+
+
+
+
+
+
+
+//========================================================================================================
 function authorize_cookie(req,res,next)
 {
     if(req.signedCookies.session_id)
@@ -197,7 +682,7 @@ function authorize_cookie(req,res,next)
 
     
 }
-
+//======================================================================================================
 app.listen(PORT, () => {
   console.log(`app running on port ${PORT}`)
 });
