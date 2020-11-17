@@ -12,8 +12,8 @@ var crypto = require('crypto');
 const {MongoClient} = require('mongodb');
 
 
-const uri = "mongodb+srv://Chris:lJk7aA7UQZg8vrwF@cluster0.toq40.mongodb.net/<dbname>?retryWrites=true&w=majority";
-app.use(cookieParser('13155e76fd8f87854073b6ab17f6c91cc8cc7ba95b6b796025ef6be9bcd2e5d99061a53cb83ca1966347244ba761f12ed1717ddd13af9817fce964790c8fa6a8'));
+const uri = "mongo key---->";
+app.use(cookieParser('coockie key----->'));
 
 
 const PORT = process.env.PORT || 5000;
